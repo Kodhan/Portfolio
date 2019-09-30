@@ -111,15 +111,26 @@
             <video class="img-fluid rounded" src="img/video/beatborn/beatGame1.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
         </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-7 col-lg-5">
         <div class="mx-auto">
-            <div class="intro-text left-0 text-center bg-faded p-5">
-                <h2 class="section-heading mb-4">
+            <div class="intro-text left-0 text-left bg-faded p-4">
+                <h2 class="section-heading">
                     <span class="section-heading-upper">Dynamic</span>
                     <span class="section-heading-lower">Combat System</span>
                 </h2>
-                <p class="mb-3">Every cup of our quality artisan coffee starts with locally sourced, hand picked ingredients. Once you try it, our coffee will be a blissful addition to your everyday morning routine - we guarantee it!
+                <p class="text-muted mb-4">In Beatborn we had a couple of tricky challenges ahead of us, we needed to create a intriguing combat system that would not distract to much from the rhythm gameplay but still keep the player engaged in the fighting. We went with a sort of hack and slash base for the combat, inspired by games such as Bayonetta and Dynasty warriors. We knew that we had a very talent animator on the team and therefor that wanted the animations to play a big part the combat, but the question was how.
                 </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="intro-text left-10 text-left bg-faded p-1  col-lg-5">
+    <h2 class="section-heading"> <span class="section-heading-upper">Animation Based Approach</span></h2>
+    <p class="text-muted mb-3">With this approach I created a combat system that was strictly based on the animations in them self, all combat moves were strictly root motion based and the collision detection was based on the swords trajectory in the animation, this was simply done by checking the delta movement between frames. But this created gameplay that was more similar to Dark souls with hard to hit attacks and a pretty small window of damage. But In a game where you want fast action and a lot of enemies dying this did not really fit the bill, so we had to look back to our inspirations and then we noticed that in games like dynasty warriors the actual animations where more a guide to what the attack was supposed to do so we went with a more forgiving cone of attack mode. In this attack iterations I created a tool for the animator to set the rotation of a cone of damage based on time. Whit this method we still had damage that was timed to the animations and followed the sword animations but they were much more forgiving. The player could need more focus on keeping the beat.</p>
+        </div>
+        <div class="col-md-3 col-lg-7">
+            <div class=".embed-responsive-16by9">
+                <video class="img-fluid rounded" src="img/video/beatborn/beatGame2.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
             </div>
         </div>
     </div>
