@@ -20,28 +20,6 @@
 </head>
 <div id="page-top">
 
-    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">Johan's Portfolio</a>
-            <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mx-0 mx-lg-1">
-                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li class="nav-item mx-0 mx-lg-1">
-                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
-                    </li>
-                    <li class="nav-item mx-0 mx-lg-1">
-                        <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
 
     <! --Navigation -->
@@ -123,21 +101,84 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="intro-text left-10 text-left bg-faded p-1  col-lg-5">
-    <h2 class="section-heading"> <span class="section-heading-upper">Animation Based Approach</span></h2>
-    <p class="text-muted mb-3">With this approach I created a combat system that was strictly based on the animations in them self, all combat moves were strictly root motion based and the collision detection was based on the swords trajectory in the animation, this was simply done by checking the delta movement between frames. But this created gameplay that was more similar to Dark souls with hard to hit attacks and a pretty small window of damage. But In a game where you want fast action and a lot of enemies dying this did not really fit the bill, so we had to look back to our inspirations and then we noticed that in games like dynasty warriors the actual animations where more a guide to what the attack was supposed to do so we went with a more forgiving cone of attack mode. In this attack iterations I created a tool for the animator to set the rotation of a cone of damage based on time. Whit this method we still had damage that was timed to the animations and followed the sword animations but they were much more forgiving. The player could need more focus on keeping the beat.</p>
+</div>
+<div class="row">
+    <div class="intro-text text-left bg-faded p-5  col-sm-6">
+        <h2 class="section-heading"> <span class="section-heading-upper">Animation Based Approach</span></h2>
+            <p class="text-muted mb-3">With this approach I created a combat system that was strictly based on the animations in them self, all combat moves were strictly root motion based and the collision detection was based on the swords trajectory in the animation, this was simply done by checking the delta movement between frames. But this created gameplay that was more similar to Dark souls with hard to hit attacks and a pretty small window of damage. But In a game where you want fast action and a lot of enemies dying this did not really fit the bill, so we had to look back to our inspirations and then we noticed that in games like dynasty warriors the actual animations where more a guide to what the attack was supposed to do so we went with a more forgiving cone of attack mode. In this attack iterations I created a tool for the animator to set the rotation of a cone of damage based on time. By this method we still had damage that was timed to the animations and followed the sword animations but they were much more forgiving. The player could now keep more focus on the beat and the crushing of robots.</p>
+    </div>
+    <div class="col-md-5 col-sm-6">
+        <div class=".embed-responsive-16by9">
+            <video class="img-fluid rounded" src="img/video/beatborn/beatGame2.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
         </div>
-        <div class="col-md-3 col-lg-7">
-            <div class=".embed-responsive-16by9">
-                <video class="img-fluid rounded" src="img/video/beatborn/beatGame2.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
+
+        <div align="center">
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapse" role="button">
+                    { Attack Struct }
+                </a>
+            </p>
+        </div>
+        <div class="collapse" id="collapse" style="max-width: 90vw">
+            <div class="card card-body";>
+            <pre id="quine" class="prettyprint lang-cs"  style="overflow: scroll">
+[Serializable]
+public struct AttackStruct
+{
+
+
+    [Header("Animation"), Tooltip("This is the name of the animation state in the animator and the name of the trigger as well")]
+    public string AttackTag;
+    [Tooltip("This clip determines the time for a animation")]
+    public AnimationClip Clip;
+    public bool IgnoreThisData;
+    [Header("Attack")]
+    [Tooltip("These are the frames the attack does damage")]
+    public Vector2Int attackWindow;
+    public Vector2Int VfxWindow;
+    public float InputBuffer;
+    public int Damage;
+    [Range(0, 10)] public float GravityFactor;
+
+    [Range(-180f, 180f)] public float AngleOffset;
+    [Range(0f, 360f)] public float Angle;
+
+    public float CloseAttackRange;
+    [Range(0f, 360f)] public float CloseAttackAngle;
+    [Range(-180f, 180f)] public float CloseAttackAngleOffset;
+
+    public float Radius;
+    public InputButton Input;
+
+    [Header("Movement")]
+    [Tooltip("If rootmotion is applied player will take no input during that attack")]
+    public bool RootMotion;
+    public bool ShouldNotRotateInAttack;
+
+    [Header("Feedback")]
+    public VFXStruct HitParticle;
+    public Material VFXSwingMaterial;
+
+    [Header("Sound")]
+    [EventRef] public string AttackSFX;
+    [EventRef] public string HitSFX;
+
+    public enum InputButton
+    {
+        Light, Heavy, Dash
+    }
+}
+</pre>
             </div>
         </div>
     </div>
-
-    </div>
+<div class="intro-text text-left bg-faded p-5  col-sm-6">
+    <img class="img-fluid rounded" src="img/portfolio/pureGeneus.jpg" autoplay="autoplay" muted="muted" loop="loop"></img>
 </div>
-    </section>
+
+</div>
+</div>
+</section>
 
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
@@ -152,3 +193,5 @@
 
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=desert"></script>
