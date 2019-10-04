@@ -102,8 +102,8 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="intro-text text-left bg-faded p-5  col-sm-6">
+<div class="row m-md-2">
+    <div class="intro-text text-left bg-faded p-3  col-sm-6">
         <h2 class="section-heading"> <span class="section-heading-upper">Animation Based Approach</span></h2>
             <p class="text-muted mb-3">With this approach I created a combat system that was strictly based on the animations in them self, all combat moves were strictly root motion based and the collision detection was based on the swords trajectory in the animation, this was simply done by checking the delta movement between frames. But this created gameplay that was more similar to Dark souls with hard to hit attacks and a pretty small window of damage. But In a game where you want fast action and a lot of enemies dying this did not really fit the bill, so we had to look back to our inspirations and then we noticed that in games like dynasty warriors the actual animations where more a guide to what the attack was supposed to do so we went with a more forgiving cone of attack mode. In this attack iterations I created a tool for the animator to set the rotation of a cone of damage based on time. By this method we still had damage that was timed to the animations and followed the sword animations but they were much more forgiving. The player could now keep more focus on the beat and the crushing of robots.</p>
     </div>
@@ -111,17 +111,16 @@
         <div class=".embed-responsive-16by9">
             <video class="img-fluid rounded" src="img/video/beatborn/beatGame2.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
         </div>
-
         <div align="center">
             <p>
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapse" role="button">
+                <a class="btn btn-primary" data-toggle="collapse" href="#attackStruct" role="button">
                     { Attack Struct }
                 </a>
             </p>
         </div>
-        <div class="collapse" id="collapse" style="max-width: 90vw">
+        <div class="collapse" id="attackStruct" >
             <div class="card card-body";>
-            <pre id="quine" class="prettyprint lang-cs"  style="overflow: scroll">
+                <pre id="quine" class="prettyprint lang-cs"  style="overflow: scroll">
 [Serializable]
 public struct AttackStruct
 {
@@ -171,12 +170,72 @@ public struct AttackStruct
 </pre>
             </div>
         </div>
+        <div class="card" align="center" style="width: 70%; margin: 0 auto;">
+            <div class="card-body" align="center">
+                <h5 class="card-title" align="center">Animated attack-cone</h5>
+                <img class="card-img-top" src="img/portfolio/pureGeneus.jpg"></img>
+            </div>
+        </div>
     </div>
-<div class="intro-text text-left bg-faded p-5  col-sm-6">
-    <img class="img-fluid rounded" src="img/portfolio/pureGeneus.jpg" autoplay="autoplay" muted="muted" loop="loop"></img>
 </div>
+    <div class="row">
+        <div class="col-md-3 col-lg-4">
+            <div class=".embed-responsive-16by9">
+                <video class="img-fluid rounded" src="img/video/beatborn/beatCol.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
+            </div>
+            <div align="center">
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collisionDetection" role="button">
+                        { Prevent Collision }
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-6">
+            <div class="mx-auto">
+                <div class="intro-text left-0 text-left bg-faded p-4">
+                    <h2 class="section-heading">
+                        <span class="section-heading-upper">Collision</span>
+                        <span class="section-heading-lower">Detection</span>
+                    </h2>
+                    <p class="text-muted mb-4">
+                        velocity based controller. This came with its own set of challenges though, mainly the collision management. The velocity had to be managed so that it would not go through solid surfaces, this is easily accomplished when the normal of the colliding surface is aligned in the opposed direction of the velocity. Then all you have to do is reflect the velocity and decrease the magnitude based on the reflective factor of the surface.  As long as there is nothing behind the charter there will be no clipping. But as soon as you have a normal at an angle you will get problems where the projected velocity will still move your character inside of the colliders you are trying to avoid. My solution for defusing this was by repeatedly moving the character based on the magnitude of the vector until it is no longer inside a collider. When I later on worked with the root motion animations in the attacks of the player I could reuse this collision algorithm by calculate the delta movement from the animations and set the characters velocity to this.
+                    </p>
+                </div>
+            </div>
+        </div>
 
-</div>
+        <div class="collapse col-md-11" id="collisionDetection" >
+            <div class="card card-body";>
+                <pre class="prettyprint lang-cs"  style="overflow: scroll">
+    public static List<RaycastHit> PreventCollision(Func<RaycastHit> raycastFunction, ref Vector3 velocity, Transform transform, float DeltaTime, float skinWidth = 0.0f, float bounciness = 0.0f)
+    {
+        RaycastHit hit;
+        List<RaycastHit> raycastHits = new List<RaycastHit>();
+        int saftyCounter = 0;
+        while ((hit = raycastFunction()).collider != null && saftyCounter++ < 100)
+        {
+            float distanceToCorrect = skinWidth / Vector3.Dot(velocity.normalized, hit.normal);
+            float distanceToMove = hit.distance + distanceToCorrect;
+
+            if (distanceToMove <= velocity.magnitude * DeltaTime)
+            {
+                raycastHits.Add(hit);
+                if (distanceToMove > 0.0f)
+                    transform.position += velocity.normalized * distanceToMove;
+
+                float dot = Vector3.Dot(velocity, hit.normal);
+                velocity += (-normal.normalized * (dot > 0.0f ? 0 : dot)) * (1.0f + bounciness);
+            }
+            else
+                break;
+        }
+        return raycastHits;
+    }
+</pre>
+            </div>
+        </div>
+    </div>
 </div>
 </section>
 
