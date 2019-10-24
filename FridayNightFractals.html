@@ -19,9 +19,6 @@
 
 </head>
 <div id="page-top">
-
-
-
     <! --Navigation -->
 <div>
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
@@ -59,15 +56,11 @@
 <header class="masthead bg-info text-white text-center">
     <div class="container d-flex align-content-stretch flex-column">
 
-        <div class="embed-responsive embed-responsive-16by9 mb-5">
-            <iframe class=".embed-responsive-item" src="https://www.youtube.com/embed/--NSbJGAZ8k" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-
         <!-- Masthead Avatar Image -->
 
         <!-- Masthead Heading -->
 
-        <h1 class="masthead-heading text-uppercase mb-0">Beatborn</h1>
+        <h1 class="masthead-heading text-uppercase mb-0">Friday Night Fractals</h1>
 
         <!-- Icon Divider -->
         <div class="divider-custom divider-light">
@@ -79,200 +72,14 @@
         </div>
         <!-- Masthead Subheading -->
         <p class="masthead-subheading font-weight-light mb-0">Unity / C#</p>
-        <p class="section-heading-upper mb-0">Combat & Controler</p>
+        <p class="section-heading-upper mb-0">Combat & UI/UX</p>
     </div>
 </header>
+
 <section class="page-section portfolio" id="portfolio">
-<div class="container">
-<div class="row">
-    <div class="col-md-3 col-lg-6">
-        <div class=".embed-responsive-16by9">
-            <video class="img-fluid rounded" src="img/video/beatborn/beatGame1.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
-        </div>
+    <div align="center">
+        <img src="img/workingOnIt.png">
     </div>
-    <div class="col-lg-5">
-        <div class="intro-text text-left bg-faded">
-            <h2 class="section-heading">
-                <span class="section-heading-upper">Dynamic</span>
-                <span class="section-heading-lower">Combat System</span>
-            </h2>
-            <p class="text-muted mb-4">In Beatborn we had a couple of tricky challenges ahead of us,
-                we needed to create a intriguing combat system that would not distract to much from
-                the rhythm gameplay but still keep the player engaged in the fighting. We went with
-                a sort of hack and slash base for the combat, inspired by games such as Bayonetta
-                and Dynasty warriors. We knew that we had a very talent animator on the team and
-                therefor that wanted the animations to play a big part the combat, but the question
-                was how.
-            </p>
-        </div>
-    </div>
-</div>
-<br>
-<div class="row ">
-    <div class="intro-text text-left bg-faded p-3  col-sm-6">
-        <h2 class="section-heading">
-            <span class="section-heading-upper">Animation Based Approach</span></h2>
-            <p class="text-muted mb-3">With this approach I created a combat system that was strictly based on the animations in them self, all combat moves were strictly
-                root motion based and the collision detection was based on the swords trajectory in the animation,
-                this was simply done by checking the delta movement between frames. This unfortunately
-                created gameplay that was more similar to Dark souls, with hard to hit attacks and a
-                pretty small windows of attack. In a game where you want fast action and a lot of
-                enemies dying this does not really fit the bill, so we had go back and look to our
-                inspirations.<br><br>
-                <iframe src="https://giphy.com/embed/fwbwM7affCHSP1l6vr" width="480" height="270" frameBorder="0" class="rounded" allowFullScreen></iframe><p></p>
-                <p class="text-muted mb2">
-                In games such as dynasty warriors the animations where more a
-                suggestion of what a attack was supposed to do more then a pixel perfect visualisation. Inspired by this
-                I went with a more forgiving animated cone of attack for attack collision detection.<br>In this
-                attack iteration I created a tool for the animator to set the rotation of a cone of
-                damage based on time. By this method we still had damage that was timed to the animations
-                and followed the sword animations but they were much more forgiving. The player could
-                now keep more focus on the beat and the crushing of robots.</p></p>
-    </div>
-    <div class="col-md-5 col-sm-6">
-        <div class=".embed-responsive-16by9">
-            <video class="img-fluid rounded" src="img/video/beatborn/beatGame3.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
-        </div>
-        <div align="center">
-            <p>
-                <a class="btn btn-primary" data-toggle="collapse" href="#attackStruct" role="button">
-                    { Attack Struct }  C#
-                </a>
-            </p>
-        </div>
-        <div class="collapse" id="attackStruct" >
-            <div class="card card-body";>
-                <pre id="quine" class="prettyprint lang-cs"  style="overflow: scroll">
-[Serializable]
-public struct AttackStruct
-{
-
-
-    [Header("Animation"), Tooltip("This is the name of the animation state in the animator and the name of the trigger as well")]
-    public string AttackTag;
-    [Tooltip("This clip determines the time for a animation")]
-    public AnimationClip Clip;
-    public bool IgnoreThisData;
-    [Header("Attack")]
-    [Tooltip("These are the frames the attack does damage")]
-    public Vector2Int attackWindow;
-    public Vector2Int VfxWindow;
-    public float InputBuffer;
-    public int Damage;
-    [Range(0, 10)] public float GravityFactor;
-
-    [Range(-180f, 180f)] public float AngleOffset;
-    [Range(0f, 360f)] public float Angle;
-
-    public float CloseAttackRange;
-    [Range(0f, 360f)] public float CloseAttackAngle;
-    [Range(-180f, 180f)] public float CloseAttackAngleOffset;
-
-    public float Radius;
-    public InputButton Input;
-
-    [Header("Movement")]
-    [Tooltip("If rootmotion is applied player will take no input during that attack")]
-    public bool RootMotion;
-    public bool ShouldNotRotateInAttack;
-
-    [Header("Feedback")]
-    public VFXStruct HitParticle;
-    public Material VFXSwingMaterial;
-
-    [Header("Sound")]
-    [EventRef] public string AttackSFX;
-    [EventRef] public string HitSFX;
-
-    public enum InputButton
-    {
-        Light, Heavy, Dash
-    }
-}
-</pre>
-            </div>
-        </div>
-        <div class="card" align="center" style="width: 70%; margin: 0 auto;">
-            <div class="card-body" align="center">
-                <h5 class="card-title" align="center">Animated attack-cone</h5>
-                <img class="card-img-top" src="img/portfolio/pureGeneus.jpg"></img>
-            </div>
-        </div>
-    </div>
-</div>
-    <div class="row">
-        <div class="col-md-3 col-lg-4">
-            <div class=".embed-responsive-16by9">
-                <video class="img-fluid rounded" src="img/video/beatborn/beatCol.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
-            </div>
-            <div align="center">
-                <p>
-                    <a class="btn btn-primary" data-toggle="collapse" href="#collisionDetection" role="button">
-                        { Prevent Collision } C#
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="col-md-7 col-lg-6">
-            <div class="mx-auto">
-                <div class="intro-text left-0 text-left bg-faded p-4">
-                    <h2 class="section-heading">
-                        <span class="section-heading-upper">Collision</span>
-                        <span class="section-heading-lower">Detection</span>
-                    </h2>
-                    <p class="text-muted mb-4 p-16">
-                        Because I wanted to have full control of the characters movement I opted for
-                        creating my own velocity based controller. This came with its own set of challenges though,
-                        mainly the collision management. The velocity had to be managed so that it would
-                        not make the character go through solid surfaces.<br>
-                        This is not hard to accomplished when the normal of the colliding surface is aligned in the opposed direction of the velocity. Then all
-                        you have to do is reflect the velocity and decrease the magnitude based on the
-                        reflective factor of the surface.  As long as there is nothing behind the charter
-                        there will be no clipping. But as soon as you have a normal at an angle you will
-                        get problems where the projected velocity will still move your character inside
-                        of the colliders you are trying to avoid. My solution for defusing this was by
-                        repeatedly moving the character based on the magnitude of the vector until it is
-                        no longer inside a collider. <br>
-                        Later on when I worked with the root motion animations of the players attacks
-                        I could reuse this collision algorithm by calculate the delta movement from the animations and set the characters velocity
-                        to this.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="collapse col-md-11" id="collisionDetection" >
-            <div class="card card-body";>
-                <pre class="prettyprint lang-cs"  style="overflow: scroll">
-    public static List<RaycastHit> PreventCollision(Func<RaycastHit> raycastFunction, ref Vector3 velocity, Transform transform, float DeltaTime, float skinWidth = 0.0f, float bounciness = 0.0f)
-    {
-        RaycastHit hit;
-        List<RaycastHit> raycastHits = new List<RaycastHit>();
-        int saftyCounter = 0;
-        while ((hit = raycastFunction()).collider != null && saftyCounter++ < 100)
-        {
-            float distanceToCorrect = skinWidth / Vector3.Dot(velocity.normalized, hit.normal);
-            float distanceToMove = hit.distance + distanceToCorrect;
-
-            if (distanceToMove <= velocity.magnitude * DeltaTime)
-            {
-                raycastHits.Add(hit);
-                if (distanceToMove > 0.0f)
-                    transform.position += velocity.normalized * distanceToMove;
-
-                float dot = Vector3.Dot(velocity, hit.normal);
-                velocity += (-normal.normalized * (dot > 0.0f ? 0 : dot)) * (1.0f + bounciness);
-            }
-            else
-                break;
-        }
-        return raycastHits;
-    }
-</pre>
-            </div>
-        </div>
-    </div>
-</div>
 </section>
 
 <!-- Bootstrap core JavaScript -->
