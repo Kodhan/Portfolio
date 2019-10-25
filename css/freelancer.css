@@ -2651,8 +2651,8 @@ fieldset:disabled a.btn {
 
 .btn-secondary {
   color: #fff;
-  background-color: #232032;
-  border-color: #232032;
+  background-color: #f5f5f5;
+  border-color: #333;
 }
 
 .btn-secondary:hover {
