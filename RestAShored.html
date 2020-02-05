@@ -78,9 +78,83 @@
     </div>
 </header>
 <section class="page-section portfolio" id="portfolio">
-    <div align="center">
-        <img src="img/workingOnIt.png">
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-lg-6">
+            <div class=".embed-responsive-16by9">
+                <video class="img-fluid rounded" src="img/video/Rest/rest_02.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="intro-text text-left bg-faded">
+                <h2 class="section-heading">
+                    <span class="section-heading-upper"></span>
+                    <span class="section-heading-lower">Player to character bond</span>
+                </h2>
+                <p class="text-muted mb-4">
+                    In Rest ashored we had to create characters that felt somewhat believable when
+                    you talked to them, so that the player would want to keep speaking with them to
+                    keep them alive. Thanks to us having this unique situation of having input
+                    being speech we believed that we could make the bond between player and
+                    character extra strong. We had to make the characters dynamic enough to not be
+                    predictable so that we would not shatter the immersion. So, we set out to make
+                    something that would give the illusion of a personality in the characters.
+                </p>
+            </div>
+        </div>
     </div>
+    <div class="row ">
+        <div class="intro-text text-left bg-faded p-3  col-sm-6">
+            <h2 class="section-heading">
+                <span class="section-heading-upper">Animation Based Approach</span></h2>
+        </div>
+        <div class="col-md-5 col-sm-6">
+            <div class=".embed-responsive-16by9">
+                <video class="img-fluid rounded" src="img/video/Rest/rest_04.mp4" autoplay="autoplay" muted="muted" loop="loop"></video>
+            </div>
+            <div align="center">
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#attackStruct" role="button">
+                        { Mood Behavior }  c++
+                    </a>
+                </p>
+            </div>
+            <div class="collapse" id="attackStruct" >
+                <div class="card card-body";>
+            <pre id="quine" class="prettyprint lang-cs"  style="overflow: scroll">
+int32 UTTMoodComponent::GetWeightedRandomMoodIndex()
+{
+	TArray<TPair<float, int32>> weightedIndex;
+	float dist = 0;
+	float totalDist = 0;
+	for (size_t i = 0; i < randomEvents.Num(); i++)
+	{
+		dist = FMath::Abs(myMood - randomEvents[i].Mood);
+		if (dist <= randomEventRange)
+		{
+			TPair<float, int32> tempPair;
+			totalDist += (randomEventRange - dist);
+			tempPair.Key = totalDist;
+			tempPair.Value = i;
+			weightedIndex.Add(tempPair);
+		}
+	}
+
+	float randomValue = FMath::RandRange(0.0, totalDist);
+	for (int i = 0; i < weightedIndex.Num(); i++)
+	{
+		if(randomValue <= weightedIndex[i].Key)
+			return weightedIndex[i].Value;
+	}
+
+	return 0;
+}
+</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 
 <!-- Bootstrap core JavaScript -->
