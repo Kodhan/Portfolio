@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Beatborn</title>
+    <title>Soundkraft</title>
 
     <!-- Custom fonts for this theme -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -59,10 +59,7 @@
 <header class="masthead bg-info text-white text-center">
     <div class="container d-flex align-content-stretch flex-column">
 
-            <iframe  class="mb-lg-4" style="height: 500px" src="img/SoundGL/index.html"></iframe>
-
-
-
+        <iframe  class="mb-lg-4" style="height: 500px" src="img/SoundGL/index.html"></iframe>
         <!-- Masthead Avatar Image -->
 
         <!-- Masthead Heading -->
@@ -82,7 +79,50 @@
         <p class="section-heading-upper mb-0">Unity Audio package</p>
     </div>
 </header>
+<section class="page-section portfolio" id="portfolio">
+    <div class="container">
+        <div class="row">
+                <div class="intro-text col-md-12">
+                    <h2 class="section-heading">
+                        <span class="section-heading-upper"></span>
+                        <span class="section-heading-lower">Why Soundkraft™?</span>
+                    </h2>
+                    <p class="text-muted">
+                    Often when working in unity you want have sounds for things like gunshots and footsteps. And it is
+                    very easy to you slap a audio source component on the object that you want to play the sound and
+                    you call the “Play()” function. But this leaves some things to be desired, the same sound over and
+                    over again does not sound great so maybe you start to pitch it to add some variation. Later on, you
+                    realize you want more than one sound for your footsteps and you add an array of clips. The whole
+                    thing gets more and more complex and the simple component you created for just playing some simple
+                    footsteps has become a behemoth of a code base.  This is where SoundKraft™ comes in, it is made to
+                    store all the data regarding the permutations of the sound in a simple to read scriptable object.
+                    Furthermore, it utilizes an object pool to keep the amount of active audio object to an minimum. I
+                    this text I will describe how I when about to create this system. If you want to download the source
+                    code here is a link to the project on <a href="https://github.com/Kodhan/Soundkraft">git</a>.
+                    </p>
+                </div>
 
+        </div>
+        <!--Audio Object-->
+        <div class="row">
+            <div class="intro-tex col-md-6">
+                <h2 class="section-heading">
+                    <span class="section-heading-upper"></span>
+                    <span class="section-heading-lower">Audio Object</span>
+                </h2>
+                <p class="text-muted">
+                    The audio object is the thing that hold all the data form the sounds.
+                </p>
+            </div>
+            <div class="justify-content-center ">
+                <img src="img/portfolio/soundKraft/AudioObject.JPG" class="rounded" style="width: 50%">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
