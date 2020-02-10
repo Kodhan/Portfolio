@@ -88,14 +88,14 @@
                         <span class="section-heading-lower">Why Soundkraft™?</span>
                     </h2>
                     <p class="text-muted">
-                    Often when working in unity you want have sounds for things like gunshots and footsteps. And it is
-                    very easy to you slap a audio source component on the object that you want to play the sound and
+                    Often when working in unity you want have sounds for things like gunshots and footsteps. It is
+                    very easy just to slap a audio source component on the object that you want to play the sound and
                     you call the “Play()” function. But this leaves some things to be desired, the same sound over and
                     over again does not sound great so maybe you start to pitch it to add some variation. Later on, you
                     realize you want more than one sound for your footsteps and you add an array of clips. The whole
                     thing gets more and more complex and the simple component you created for just playing some simple
                     footsteps has become a behemoth of a code base.  This is where SoundKraft™ comes in, it is made to
-                    store all the data regarding the permutations of the sound in a simple to read scriptable object.
+                    store all the data regarding the permutations of the sound in a simple to read data asset.
                     Furthermore, it utilizes an object pool to keep the amount of active audio object to an minimum. I
                     this text I will describe how I when about to create this system. If you want to download the source
                     code here is a link to the project on <a href="https://github.com/Kodhan/Soundkraft">git</a>.
@@ -156,15 +156,15 @@
                     <span class="section-heading-lower">Audio Object</span>
                 </h2>
                 <p class="text-muted">
-                    The audio object is a scriptable object created to hold the data regarding the random ranges and
-                    values of the sounds. All the user needs to play a sound is a reference to this object and they
-                    can run the Play method. The scriptable object takes care of the selecting of random clips and
-                    allocating of audio objects. to avoid the same sound repeating two times I a row I implemented a
-                    queuing system whereas in all the clips in the list will be played at least one time before they
-                    can be played again. To give the user more control of how the sounds play each audio object can be
-                    linked to a unity mixer group, this helps when the user wants to add addition effect to the sound.
-                    Furthermore, all the clips are subjected to pitch and volume pitching based on the values setup here
-                    in the audio object.
+                    The audio object inherits from scriptable object witch is Unity's default data asset
+                    it hold the data regarding the random ranges and values for the sounds. All the user needs to do to play a
+                    sound is a reference to this object and they can run the Play method. The audio object object takes
+                    care of the selecting of random clips and allocating of audio objects. To avoid the same sound
+                    repeating two times I a row I implemented a queuing system whereas in all the clips in the list
+                    will be played at least one time before they can be played again. To give the user more control of
+                    how the sounds play each audio object can be linked to a unity mixer group, this helps when the user
+                    wants to add addition effect to the sound. Furthermore, all the clips are subjected to pitch and
+                    volume pitching based on the values setup here in the audio object.
                 </p>
                 <h2 class="section-heading">
                     <span class="section-heading-lower">Audio Controller</span>

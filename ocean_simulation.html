@@ -55,15 +55,20 @@
 <!Main info>
 <header class="masthead bg-info text-white text-center">
     <div class="container d-flex align-content-stretch flex-column">
-        <div class="mb-2">
-            <img src="img/workingOnIt.png">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <a href="ocean_simulation.html#">
+                    <video class="modal-content mb-1" autoplay="autoplay" muted="muted" loop="loop" >
+                        <source src="img/video/Sea/Vadboll.mp4" type="video/mp4">
+                    </video>
+                </a>
+            </div>
         </div>
 
-
-        <!-- Masthead Avatar Image -->
-
         <!-- Masthead Heading -->
-
+        <div>
+            <br>
+        </div>
         <h1 class="masthead-heading text-uppercase mb-0">Ocean Simulation</h1>
 
         <!-- Icon Divider -->
@@ -79,6 +84,41 @@
         <p class="section-heading-upper mb-0">Physics & Simulation</p>
     </div>
 </header>
+<section class="page-section portfolio" id="portfolio">
+    <div class="container">
+        <div class="row">
+            <h2 class="section-heading">
+                <span class="section-heading-lower">What Is Happening Here</span>
+            </h2>
+            <p class="text-muted">
+                There are two main parts to this project. One is the ocean that is comprised of waves moving along the
+                surface and the other is the physics object that inhabits this ocean, in this case a small beach ball.
+                The goal of the simulation is to recreate physics like behaviour in a dynamic ocean we have some parts down
+                and here I will describe what I did to solve the problems I have encountered on the way.
+            </p>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-7">
+                <h2 class="section-heading">
+                    <span class="section-heading-lower">Waves</span>
+                </h2>
+                <p class="text-muted">
+                    So what is a wave, Webster’s dictionary says: “to motion with the hands or with something held in
+                    them in signal or salute”. Well that is not quite what I am looking for, what we want is an
+                    oscillating movement, the same thing we have in things like soundwaves and pendulums. What happens
+                    if we create a basic sinus curve, we get something like the graph here on the right.
+                </p>
+            </div>
+            <div>
+                <img src="img/portfolio/ocean/wave.gif" height="219" width="432"/>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
 
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>

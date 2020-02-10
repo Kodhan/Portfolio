@@ -555,8 +555,10 @@
                 </div>
                 </div>
                 <!-- Portfolio Modal - Text -->
-                <p class="mb-5">By using a compute shader I generate and displace a mesh, and by using a compute shader
-                  I access the height of a vertices a   current point to be able to simulate physics on object in the ocean.
+                <p class="mb-5">By creating and displacing a mesh with a compute shader I create wave patterns that can
+                    be used in physics calculation by streaming the gpu data pack to the cpu after displacing it.
+                    This data can then be used to calculate things like buoyancy and drag. This project is a work in
+                    progress and later on the goal is to simulate physics on more complex objects.
                 </p>
                 <a class="btn btn-info mb-5" href="ocean_simulation.html#">Read More</a>
               </div>
