@@ -244,31 +244,31 @@ public struct AttackStruct
         <div class="collapse col-md-11" id="collisionDetection" >
             <div class="card card-body";>
                 <pre class="prettyprint lang-cs"  style="overflow: scroll">
-    public static List<RaycastHit> PreventCollision(Func<RaycastHit> raycastFunction, ref Vector3 velocity, Transform transform, float DeltaTime, float skinWidth = 0.0f, float bounciness = 0.0f)
-    {
-        RaycastHit hit;
-        List<RaycastHit> raycastHits = new List<RaycastHit>();
-        int saftyCounter = 0;
-        while ((hit = raycastFunction()).collider != null && saftyCounter++ < 100)
-        {
-            float distanceToCorrect = skinWidth / Vector3.Dot(velocity.normalized, hit.normal);
-            float distanceToMove = hit.distance + distanceToCorrect;
+                    public static List<RaycastHit> PreventCollision(Func<RaycastHit> raycastFunction, ref Vector3 velocity, Transform transform, float DeltaTime, float skinWidth = 0.0f, float bounciness = 0.0f)
+                    {
+                        RaycastHit hit;
+                        List<RaycastHit> raycastHits = new List<RaycastHit>();
+                        int saftyCounter = 0;
+                        while ((hit = raycastFunction()).collider != null && saftyCounter++ < 100)
+                        {
+                            float distanceToCorrect = skinWidth / Vector3.Dot(velocity.normalized, hit.normal);
+                            float distanceToMove = hit.distance + distanceToCorrect;
 
-            if (distanceToMove <= velocity.magnitude * DeltaTime)
-            {
-                raycastHits.Add(hit);
-                if (distanceToMove > 0.0f)
-                    transform.position += velocity.normalized * distanceToMove;
+                            if (distanceToMove <= velocity.magnitude * DeltaTime)
+                            {
+                                raycastHits.Add(hit);
+                                if (distanceToMove > 0.0f)
+                                    transform.position += velocity.normalized * distanceToMove;
 
-                float dot = Vector3.Dot(velocity, hit.normal);
-                velocity += (-normal.normalized * (dot > 0.0f ? 0 : dot)) * (1.0f + bounciness);
-            }
-            else
-                break;
-        }
-        return raycastHits;
-    }
-</pre>
+                                float dot = Vector3.Dot(velocity, hit.normal);
+                                velocity += (-normal.normalized * (dot > 0.0f ? 0 : dot)) * (1.0f + bounciness);
+                            }
+                            else
+                                break;
+                        }
+                        return raycastHits;
+                    }
+                </pre>
             </div>
         </div>
     </div>

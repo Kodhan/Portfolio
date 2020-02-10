@@ -103,6 +103,27 @@
                 </div>
 
         </div>
+        <br>
+        <div class="row">
+            <div class="figure-img col-md-5">
+                <img class="card-img-top" src="img/portfolio/soundKraft/soundkraft_diagram.png"></img>
+            </div>
+            <div class="intro-text col-md-7">
+                <h2 class="section-heading">
+                    <span class="section-heading-upper"></span>
+                    <span class="section-heading-lower">The Structure</span>
+                </h2>
+                <p class="text-muted">
+                    As mention earlier the goal of the structure is to make the use of dynamic SFX as easy as possible
+                    and as alive as possible by avoiding repetition of sounds. The data controlling the sounds is stored
+                    in the audio object and it is the audio object that is the main interfacing point for the user. But if
+                    they want more ingame control they can use the controller, that works a bit like a remote to a audio
+                    source that is obtained from the objectpool.
+                </p>
+            </div>
+        </div>
+        <br>
+        <br>
         <!--Audio Object-->
         <div class="row">
             <div class="intro-tex col-md-6">
@@ -111,15 +132,175 @@
                     <span class="section-heading-lower">Audio Object</span>
                 </h2>
                 <p class="text-muted">
-                    The audio object is the thing that hold all the data form the sounds.
+                    The audio object is a scriptable object created to hold the data regarding the random ranges and
+                    values of the sounds. All the user needs to play a sound is a reference to this object and they
+                    can run the Play method. The scriptable object takes care of the selecting of random clips and
+                    allocating of audio objects. to avoid the same sound repeating two times I a row I implemented a
+                    queuing system whereas in all the clips in the list will be played at least one time before they
+                    can be played again. To give the user more control of how the sounds play each audio object can be
+                    linked to a unity mixer group, this helps when the user wants to add addition effect to the sound.
+                    Furthermore, all the clips are subjected to pitch and volume pitching based on the values setup here
+                    in the audio object.
                 </p>
             </div>
-            <div class="justify-content-center ">
-                <img src="img/portfolio/soundKraft/AudioObject.JPG" class="rounded" style="width: 50%">
+        <div class="col-md-6 ">
+            <div class="col-md-15"align="center">
+                <img src="img/portfolio/soundKraft/AudioObject.JPG" class="rounded" style="width: 60%">
+                <br>
+                <div align="center">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collisionDetection" role="button">
+                            { Audio Object } C#
+                        </a>
+                    </p>
+                </div>
             </div>
-
         </div>
+        <!--AudioObject code-->
+        <div class="collapse col-md-15" id="collisionDetection" >
+            <div class="card card-body";>
+                <pre class="prettyprint lang-cs"  style="overflow: scroll">
+using UnityEngine;
+using UnityEngine.Audio;
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
+namespace SoundKraft
+{
+
+    [CreateAssetMenu(fileName = "AudioObject", menuName = "AudioObject")]
+    public class AudioObject : ScriptableObject
+    {
+        public AudioMixerGroup MixerGroup;
+        public List<AudioClip> Clips;
+
+        [MinMax(0, 1, ShowEditRange = true)] public MathHelper.FloatMinMax Volume = new MathHelper.FloatMinMax(1, 1);
+        [MinMax(0, 3, ShowEditRange = true)] public MathHelper.FloatMinMax Pitch = new MathHelper.FloatMinMax(1, 1);
+        [MinMax(1, 1000, ShowEditRange = true)] public Vector2 Distance = new Vector2(1, 1000);
+        [Range(0, 1)] public float SpatialBlend = 1;
+        public AudioRolloffMode RolloffMode = AudioRolloffMode.Logarithmic;
+        public bool IsLooping;
+        public bool Sound2D = true;
+        [Header("Fade in")]
+        public float FadeInTime = 0;
+        public AnimationCurve FadeInCurve;
+        [Header("Fade out")]
+        public float FadeOutTime = 0;
+        public AnimationCurve FadeOutCurve;
+
+        [Header("")] public float MinSpawnInterval = 0f;
+        private static AudioListener _audioListener;
+        private List<int> _indexList;
+        private float _lastSpawnTime;
+        private AudioController _lastAvailableController;
+        private Camera _camera;
+
+        //Play the sound on specified position and transform
+        public AudioController Play(Vector3 pos = default(Vector3), Transform parent = default(Transform), float delay = 0)
+        {
+            if (Time.time - _lastSpawnTime < MinSpawnInterval && _lastAvailableController != null)
+                return _lastAvailableController;
+
+            _lastAvailableController = ObjectPool.Instantiate(AudioSceeneObject, pos, Quaternion.identity, parent).GetComponent<AudioController>();
+
+            _lastAvailableController.SetUp(this);
+            _lastAvailableController.transform.position = pos;
+
+
+            if (parent != default(Transform)) _lastAvailableController.transform.parent = parent;
+            _lastSpawnTime = Time.time;
+            return _lastAvailableController;
+        }
+        //Play the sound on the camera
+        public AudioController Play()
+        {
+            Transform currentCameraTransform = null;
+
+            if (Camera.current)
+                currentCameraTransform = Camera.current.transform;
+            else if (Camera.main)
+                currentCameraTransform = Camera.main.transform;
+            else if (_audioListener)
+            {
+                currentCameraTransform = _audioListener.transform;
+            }
+            else
+            {
+                _audioListener = FindObjectOfType<AudioListener>();
+                currentCameraTransform = _audioListener.transform;
+            }
+
+            if (currentCameraTransform != null)
+                return Play(currentCameraTransform.position, currentCameraTransform);
+
+            Debug.LogError("There is no audio listener in the scene");
+            return null;
+
+        }
+
+        public AudioClip GetClip()
+        {
+            if(Clips.Count < 3)
+            {
+                return Clips[Random.Range(0, Clips.Count)];
+            }
+
+            if (_indexList == null || _indexList.Count != Clips.Count)
+            {
+                _indexList = null;
+                _indexList = new List<int>();
+                for (int i = 0; i < Clips.Count; i++)
+                {
+                    _indexList.Add(i);
+                }
+            }
+
+            int quarantinedIndex = Mathf.CeilToInt(Clips.Count / 3f);
+            int tempIndex = _indexList[Random.Range(quarantinedIndex + 1, _indexList.Count)];
+
+            _indexList.Remove(tempIndex);
+            _indexList.Insert(0, tempIndex);
+
+            return Clips[tempIndex];
+        }
+
+        public void TestPlay()
+        {
+            IEnumerable<EditorAudioTester> testerList = FindObjectsOfType<EditorAudioTester>().Where(audio => audio.IsPlayingAudioObject(this));
+            if (IsLooping && testerList.ToArray().Length > 0)
+            {
+                foreach (var editorAudioTester in testerList)
+                {
+                    DestroyImmediate(editorAudioTester.gameObject);
+                }
+            }
+            else
+                new GameObject("EditorAudio(temp)").AddComponent<EditorAudioTester>().Initialize(this);
+        }
+    }
+}
+                </pre>
+            </div>
+        </div>
+        <!--Audio Controller-->
+        <div class="row">
+            <div class="intro-text col-md-12">
+                <h2 class="section-heading">
+                    <span class="section-heading-upper"></span>
+                    <span class="section-heading-lower">Audio Controller</span>
+                </h2>
+                <p class="text-muted">
+                    The job of the controller is just that, to control the sounds that are playing. The controller takes
+                    care of fading in and out the sounds and returns the audio object to objectpool when the sound is
+                    done playing. The controller takes care of the actual setting of the values in the audio source, in
+                    many ways the audio controller is the interface for the audio source. The user should never change
+                    the actual audio source by them self’s, instead all of that is handled trough the controller. Every
+                    time the play function is called from the audio object a instance of the controller is created as a
+                    form of remote for the user to access and change sounds on the fly.
+                </p>
+            </div>
+        </div>
     </div>
 
 </section>
