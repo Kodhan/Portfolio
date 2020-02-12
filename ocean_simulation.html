@@ -87,15 +87,17 @@
 <section class="page-section portfolio" id="portfolio">
     <div class="container">
         <div class="row">
-            <h2 class="section-heading">
-                <span class="section-heading-lower">What Is Happening Here</span>
-            </h2>
-            <p class="text-muted">
-                There are two main parts to this project. One is the ocean that is comprised of waves moving along the
-                surface and the other is the physics object that inhabits this ocean, in this case a small beach ball.
-                The goal of the simulation is to recreate physics like behaviour in a dynamic ocean we have some parts down
-                and here I will describe what I did to solve the problems I have encountered on the way.
-            </p>
+            <div class="col-md-12">
+                <h2 class="section-heading">
+                    <span class="section-heading-lower">What Is Happening Here</span>
+                </h2>
+                <p class="text-muted">
+                    There are two main parts to this project. One is the ocean that is comprised of waves moving along the
+                    surface and the other is the physics object that inhabits this ocean, in this case a small beach ball.
+                    The goal of the simulation is to recreate physics like behaviour in a dynamic ocean we have some parts down
+                    and here I will describe what I did to solve the problems I have encountered on the way.
+                </p>
+            </div>
         </div>
         <br>
         <div class="row">
@@ -106,12 +108,152 @@
                 <p class="text-muted">
                     So what is a wave, Webster’s dictionary says: “to motion with the hands or with something held in
                     them in signal or salute”. Well that is not quite what I am looking for, what we want is an
-                    oscillating movement, the same thing we have in things like soundwaves and pendulums. What happens
-                    if we create a basic sinus curve, we get something like the graph here on the right.
+                    oscillating movement, the same thing we have in things like soundwaves and pendulums.  So, what
+                    happens if we create a basic sine curve, we get something like the gif on the right.
                 </p>
             </div>
+            <div >
+                <img src="img/portfolio/ocean/wave.gif" class="col-md-11">
+
+            </div>
+
+            <div class="row">
+
+                <img src="img/portfolio/ocean/gerstner.png" class="col-md-3">
+                <p class="text-muted col-md-7">
+                    But normally waves don’t look as uniform as this, they have more of a crest and steepness to them. So,
+                    we somehow have to make them act more naturally. This is where the Gerstner-wave comes in, this is what
+                    is represented on the graph.
+                    When adding two sine waves you can create more complex characteristics
+                    of the waves. In my example I have only implemented a basic form of Gerster-waves to give it some
+                    steepness in the future I am looking to add more directions to give it a more realistic feeling with
+                    different sizes of waves and patterns, at this point we have this uniform wave pattern. Now that we know
+                    what sort of pattern we want our wave to create, how do we go about and create this in code? First
+                    of all we should start of with generating of a plane so that we have some vertices to manipulate in to
+                    our decried pattern. Remember we want this to be able to execute in runtime for us to be able to use
+                    this data for physics calculations. It just so happens to be that we have a gpu that is quite good
+                    at handling vast amount of float values. Here is how I did it
+                </p>
+
+            </div>
+            <div class="col-md-10">
+                <div class="justify-content-center">
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#planeGeneration" role="button">
+                        { Plane Generating } C#
+                    </a>
+                </p>
+                </div>
+            </div>
             <div>
-                <img src="img/portfolio/ocean/wave.gif" height="219" width="432"/>
+                <div class="collapse col-md-11" id="planeGeneration" >
+                <div class="col-md-12";>
+                <pre class="prettyprint lang-hlsl"  style="overflow: scroll">
+[numthreads(1,1,1)]
+void GenerateMesh(uint3 id : SV_DispatchThreadID)
+{
+    float offset = float(SeaResolution * SeaSize * 0.5f);
+    float maxSize = SeaSize * SeaResolution;
+	//Creating verticies & Uvs
+	for (uint i = 0; i < VerticesPerSide; i++)
+	{
+		for (uint j = 0; j < VerticesPerSide; j++)
+		{
+			Vertices[i * VerticesPerSide + j] = float3(j * SeaResolution, 0, i * SeaResolution) - offset;
+			Uvs[i * VerticesPerSide + j] = (float2(j * SeaResolution, i * SeaResolution) - offset);
+		}
+	}
+
+	int nrVerticies = VerticesPerSide * VerticesPerSide;
+
+	uint2 index = uint2(0,0);
+	uint triangleIndex = 0;
+	int size = nrVerticies * 6;
+
+	//Creating triangles
+	for (int k = 0; k < nrVerticies; k++)
+	{
+
+		index.x = k / VerticesPerSide;
+		index.y = k % VerticesPerSide;
+
+		if (index.x == SeaSize || index.y == SeaSize)
+			continue;
+
+		Triangles[triangleIndex++] = index.x + index.y * VerticesPerSide; // (0, 0) bottom left
+		Triangles[triangleIndex++] = index.x + (index.y + 1) * VerticesPerSide; // (0, 1) top left
+		Triangles[triangleIndex++] = index.x + 1 + (index.y + 1) * VerticesPerSide; // (1, 1) top right
+
+		Triangles[triangleIndex++] = index.x + 1 + (index.y + 1) * VerticesPerSide; // (1, 1) top right
+		Triangles[triangleIndex++] = index.x + 1 + index.y * VerticesPerSide; // (1, 0) bottom right
+		Triangles[triangleIndex++] = index.x + index.y * VerticesPerSide; // (0, 0) bottom left
+	}
+}
+                </pre>
+                </div>
+                </div>
+                <div class="row">
+
+                    <img src="img/portfolio/ocean/plane.png" class="col-md-3">
+                    <p class="text-muted col-md-7">
+                        So now we have our plane lets move those vertices!
+                        But moving them on the cpu will be very slow and we can’t just do it in a regular shader
+                        because we want to access the vertices height and position for our calculations. Well there
+                        just happens to be a solution, compute shaders. A compute shader in and of itself does not handle
+                        meshes but if we feed it the mesh data it can do the calculations and give it back to the cpu.
+                        The cpu tells the gpu what the current time of the simulation is for it to temporally change
+                        and what the vertices it is working on.  Then it is only a mater of doing the calculations.
+                    </p>
+
+                </div>
+                <br>
+            </div>
+
+
+            <div class="col-md-10">
+                <div class="justify-content-center">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#motion" role="button">
+                            { Wave Motion } C#
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="collapse col-md-11" id="motion" >
+                    <div class="col-md-12";>
+                <pre class="prettyprint lang-hlsl"  style="overflow: scroll">
+RWStructuredBuffer<float3> ActiveVertices;
+float WaveLength = 0.5;
+float Amplitude;
+float Speed;
+float2 Direction;
+uint SizePerSide;
+float Resolution;
+float Frequency;
+
+float Time;
+float Steepness;
+float Gerst;
+
+[numthreads(1, 1, 1)]
+void UpdateMesh(uint3 id : SV_DispatchThreadID)
+{
+	float3 currentVector  = ActiveVertices[id.x + id.y * SizePerSide];
+	float2 undisturbedVector  = float2(id.x,  id.y);
+   // float b = 1 - (Steepness * dot(normalize(Direction)
+    float k = 6.28318530718f / WaveLength;
+    float w = dot(normalize(Direction) * k, undisturbedVector) - (6.28318530718f / Frequency) * Time;
+    currentVector.x = undisturbedVector.x - (normalize(Direction) * Amplitude * sin(w));
+    currentVector.y = Amplitude * cos(w);
+    //
+    currentVector.x -= Resolution * SizePerSide * 0.5f;
+
+    ActiveVertices[id.x + id.y * SizePerSide] = currentVector;
+}
+                </pre>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -137,4 +279,4 @@
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=desert"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=Default"></script>
